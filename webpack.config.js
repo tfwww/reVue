@@ -1,24 +1,19 @@
+const path = require('path');
+
 module.exports = {
-    devtool: 'source-map',
     entry: {
-        app: './index.js'
+        reVue: './index.js'
     },
+    watch: true,
     output: {
-        path: './dist',
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
     module: {
-        preLoaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "jshint-loader"
-            }
-        ],
         loaders: [
             {
                 test: /\.(js)$/,                   
-                loader: 'babel',                          
+                loader: 'babel-loader',                          
                 exclude: /node_modules/      
             }
         ]
