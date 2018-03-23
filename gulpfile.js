@@ -9,11 +9,13 @@ gulp.task('default', ['browser-sync', 'watch-webpack']);
 gulp.task('browser-sync', function() {
     browserSync.init({
         server: {
-            baseDir: "./"
+            baseDir: "./",
+            watchTask: true,
         },
         port: 3200,        
     });
     
+    gulp.watch('./exp/*.html').on('change', browserSync.reload)    
     gulp.watch('./dist/*.js').on('change', browserSync.reload)    
 });
 
