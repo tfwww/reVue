@@ -21,35 +21,49 @@
 </head>
 <body>
     <div id="app">
-        <h2 v-text='hello'></h2>
+        <!-- <h2 v-text='hello'></h2>
         <input type="text" v-model='counter'>
         <button v-on-click='add' type="button">add</button>
-        <p v-text='counter'></p>
+        <p v-text='counter'></p> -->
+        <div v-text="msg | capitalize"></div>
+		<div v-show="something"></div>
+		<div class="button" v-text="msg"></div>
+        <div v-class-red="error" v-text="hello"></div>
     </div>
     <script src='../dist/reVue.js'></script>
     <script>
         var log = console.log.bind(console)
 
-        var vm = new Welement({
-            el: 'app',
+        // var vm = new Welement({
+        //     el: 'app',
+        //     data: {
+        //         counter: 1,
+        //         hello: 'ahahah!'
+        //     },
+        //     methods: {
+        //         add: function () {
+        //             vm.counter += 1;
+        //         }
+        //     },
+        //     ready () {
+        //         let self = this;
+        //         self.hello = 'Ready, go!';
+        //         setTimeout(function () {
+        //             self.hello = 'Done!';
+        //         }, 3000)
+        //     }
+        // })
+        var app = new Welement({
+            el: 'app',            
             data: {
-                counter: 1,
-                hello: 'ahahah!'
-            },
-            methods: {
-                add: function () {
-                    vm.counter += 1;
-                }
-            },
-            ready () {
-                let self = this;
-                self.hello = 'Ready, go!';
-                setTimeout(function () {
-                    self.hello = 'Done!';
-                }, 3000)
-            }
+                msg: 'hellowinter',
+                hello: 'hello',
+                changeMessage: function () {
+                    app.data.msg = 'msg'
+                }                          
+            }    
         })
-        log(vm)
+        log(app)
     </script>
 </body>
 </html>
