@@ -3,7 +3,6 @@ import Filters from './filters.js'
 
 const prefix = 'v'
 
-// module.exports = 'reVue';
 export default class Welement {
     constructor(opts = {}) {
         this.el = document.getElementById(opts.el)
@@ -97,6 +96,7 @@ function parseDirective(attr) {
     var symInx = noprefix.indexOf('-')
     var dirName = symInx === -1 ? noprefix : noprefix.slice(0, symInx)
     var def = Directives[dirName]
+    log('def', def)
     // 取第二个 - 的参数, 事件
     var arg = symInx === -1 ? null : noprefix.slice(symInx + 1)
     return def === undefined ? null : {
@@ -139,12 +139,12 @@ function bindAccessor(obj, key, binding) {
         set: function(newValue) {            
             var oldValue = binding.value
             if (oldValue != newValue) {
-                binding.value = newValue                
+                binding.value = newValue
                 binding.directives.forEach(function(directive) {                    
                     if (newValue && directive.filter) {
                         newValue = directive.filter(newValue)
                     }
-                    directive.update(directive.el, newValue, directive.argument, directive)
+                    directive.update(newValue)
                 })
             }
         }
