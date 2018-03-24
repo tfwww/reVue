@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-    <div id="app">
+    <div id="app" v-on-click="changeMessage">
         <!-- <h2 v-text='hello'></h2>
         <input type="text" v-model='counter'>
         <button v-on-click='add' type="button">add</button>
@@ -34,7 +34,7 @@
     <script>
         var log = console.log.bind(console)
 
-        // var vm = new Welement({
+        // var app = new Welement({
         //     el: 'app',
         //     data: {
         //         counter: 1,
@@ -61,7 +61,7 @@
                 changeMessage: function () {
                     app.data.msg = 'msg'
                 }                          
-            }    
+            }
         })
         log(app)
     </script>

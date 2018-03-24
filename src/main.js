@@ -10,8 +10,9 @@ export default class Welement {
         // 内部变量
         this._bindings = {}
         this._opts = opts
-
+        // 
         this.data = {}
+        this.methods = {}
         this.init()
     }
 
@@ -22,9 +23,10 @@ export default class Welement {
 
         Array.prototype.forEach.call(this.els, processNode)
         processNode(this.el)
-
+        // 绑定初始数据
         for (var key in bindings) {
             self.data[key] = opts.data[key]
+            // self.methods[key] = opts.methods[key]
         }
 
         function processNode(el) {
@@ -96,7 +98,6 @@ function parseDirective(attr) {
     var symInx = noprefix.indexOf('-')
     var dirName = symInx === -1 ? noprefix : noprefix.slice(0, symInx)
     var def = Directives[dirName]
-    log('def', def)
     // 取第二个 - 的参数, 事件
     var arg = symInx === -1 ? null : noprefix.slice(symInx + 1)
     return def === undefined ? null : {

@@ -7,8 +7,9 @@ export default {
     },
     on: {
         // 事件, 类似于 v-on-click
-        update: function () {
-            
+        update: function (handler) {            
+            var event = this.argument            
+            this.el.addEventListener(event, handler)
         }
     }
 }
