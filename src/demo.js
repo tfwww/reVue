@@ -71,7 +71,7 @@ function makeBindings(opts) {
     return bindings
 }
 
-// 解析节点，输出节点信息列表
+// 解析节点，输出所有节点信息列表
 // [{'text': 'hello'}, ...]
 function parseNodes($els) {
     var attrs = []
@@ -83,13 +83,15 @@ function parseNodes($els) {
 }
 
 // 输出一个节点的详细信息
-// {name: 'text', value: 'hello', owner: $el}
+// [{name: 'text', value: 'hello', owner: $el}, ...]
 function nodeInfo($el) {
     let attrs = $el.attributes
     log('attrs', attrs)
     let list = Array.prototype.map.call(attrs, function(attr) {
         let name = rmPrefix(attr.name)        
         return {
+            name: name,
+            value: attr.value,
             owner: attr.ownerElement,            
         }
     })  
