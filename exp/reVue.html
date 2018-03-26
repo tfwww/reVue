@@ -20,50 +20,53 @@
     </style>
 </head>
 <body>
-    <div id="app" v-on-click="changeMessage">
-        <h2 v-text='hello'></h2>
-        <input type="text" v-model='counter'>
+    <div id="app">
+        <h2 v-text='hello' v-xxx='xxxx'></h2>        
+        <!-- <input type="text" v-model='counter'>
         <button v-on-click='add' type="button">add</button>
-        <p v-text='counter'></p>
-        <!-- <div v-text="msg | capitalize"></div>
-		<div v-show="something"></div>
-		<div class="button" v-text="msg"></div>
-        <div v-class-red="error" v-text="hello"></div> -->
+        <p v-text='counter'></p>        -->
     </div>
     <script src='../dist/reVue.js'></script>
     <script>
         var log = console.log.bind(console)
-
-        var app = new Welement({
-            el: 'app',
+        
+        var demo = new Demo({
+            id: 'app',
             data: {
-                counter: 1,
-                hello: 'ahahah!',                
+                hello: 'hello ve'
             },
             methods: {
-                add: function () {
-                    app.data.counter += 1;                    
+                add: function() {
+                    log('add')
                 }
-            },
-            ready () {
-                let self = this;
-                self.hello = 'Ready, go!';
-                setTimeout(function () {
-                    self.hello = 'Done!';
-                }, 3000)
             }
         })
+        log('demo', demo)
+
         // var app = new Welement({
-        //     el: 'app',            
+        //     el: 'app',
         //     data: {
-        //         msg: 'hello winter',
-        //         hello: 'hello',
-        //         changeMessage: function () {
-        //             app.data.msg = 'msg'
-        //         }                          
-        //     }
-        // })
-        log(app)
+        //         counter: 1,
+        //         hello: 'ahahah!',
+        //     },
+        //     methods: {
+        //         add: function () {
+        //             log('this', app)
+        //             this.hello = 'sdfsdf'
+        //             app.data.counter += 1;
+        //         }
+        //     },
+        //     // ready: function() {
+        //     //     log('ready this', this)
+        //     //     this.hello = 'abcddddd'
+        //     //     // let self = this;
+        //     //     // self.hello = 'Ready, go!';
+        //     //     // setTimeout(function () {
+        //     //     //     self.hello = 'Done!';
+        //     //     // }, 3000)
+        //     // }
+        // })        
+        // log(app)
     </script>
 </body>
 </html>

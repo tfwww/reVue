@@ -13,8 +13,9 @@ export default class Welement {
         this._bindings = {}
         this._opts = opts
         // 
-        this.data = {}        
-        this.init()        
+        this.data = {} 
+        this.init()
+        this.ready()
     }
 
     init() {
@@ -25,13 +26,10 @@ export default class Welement {
         Array.prototype.forEach.call(this.els, processNode)
         processNode(this.el)
         // 绑定初始数据
-        for (var key in bindings) {
-            log('key', key)
+        for (var key in bindings) {            
             self.data[key] = opts.data[key]
             // self.methods[key] = opts.methods[key]
-        }
-
-        log('this data init', this.data)        
+        }        
 
         function processNode(el) {
             var attrs = cloneAttrs(el.attributes)
@@ -41,6 +39,18 @@ export default class Welement {
                     bindDirective(self, el, bindings, directive)
                 }
             })
+        }
+    }
+
+    /**
+     * 生命周期函数
+     */
+    ready() {
+        // this._opts.ready()
+        if (this._opts.ready && typeof this._opts.ready == 'function') {
+            // 改变生命周期函数作用域
+            // this._opts.ready.call(this);
+            this._opts.ready()
         }
     }
 }
@@ -73,7 +83,7 @@ function extendObj(base, node) {
     for (let key in node) {
         if (node.hasOwnProperty(key)) {            
             base[key] = node[key]
-        }        
+        }
     }
 }
 
@@ -140,14 +150,15 @@ function bindDirective(welement, el, bindings, directive) {
 
     directive.el = el
     binding.directives.push(directive)    
-    var data = welement.data
-    if (!data.hasOwnProperty(key)) {
+    // var data = welement.data
+    if (!welement.hasOwnProperty(key)) {
         bindAccessor(welement, key, binding)
     }
 }
 
-function bindAccessor(obj, key, binding) {    
-    Object.defineProperty(obj.data, key, {
+function bindAccessor(welement, key, binding) {    
+    Object.defineProperty(welement.data, key, {
+        configurable: true,
         get: function() {
             return binding.value
         },
@@ -155,6 +166,16 @@ function bindAccessor(obj, key, binding) {
             var oldValue = binding.value
             if (oldValue != newValue) {
                 binding.value = newValue
+                // binding.directives.forEach(function (directive) {
+                //     directive.update(
+                //         directive.el,
+                //         newValue,
+                //         directive.argument,
+                //         directive,
+                //         welement,
+                //         key
+                //     );
+                // });
                 binding.directives.forEach(function(directive) {                    
                     if (newValue && directive.filter) {
                         newValue = directive.filter(newValue)
