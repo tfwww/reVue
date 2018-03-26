@@ -5,15 +5,16 @@ const prefix = 'v'
 
 export default class Welement {
     constructor(opts = {}) {
+        extendObj(opts.data, opts.methods)
+        
         this.el = document.getElementById(opts.el)
         this.els = getDirSels(this.el, Directives)        
         // 内部变量
         this._bindings = {}
         this._opts = opts
         // 
-        this.data = {}
-        this.methods = {}
-        this.init()
+        this.data = {}        
+        this.init()        
     }
 
     init() {
@@ -25,14 +26,17 @@ export default class Welement {
         processNode(this.el)
         // 绑定初始数据
         for (var key in bindings) {
+            log('key', key)
             self.data[key] = opts.data[key]
             // self.methods[key] = opts.methods[key]
         }
 
+        log('this data init', this.data)        
+
         function processNode(el) {
             var attrs = cloneAttrs(el.attributes)
             attrs.forEach(function(attr) {
-                var directive = parseDirective(attr)            
+                var directive = parseDirective(attr)
                 if (directive) {
                     bindDirective(self, el, bindings, directive)
                 }
@@ -49,7 +53,7 @@ function getDirSels(root, directives) {
     let dirs = Object.keys(directives)    
 
     let selectors = dirs.map(function(item) {
-        var selector = ''
+        let selector = ''
         if (item != 'on') {
             selector = `[${prefix}-${item}]`
         }        
@@ -61,6 +65,16 @@ function getDirSels(root, directives) {
     }).join()
     // '[v-text],[v-model],[v-on-click],[v-on-change],[v-on-blur]'
     return root.querySelectorAll(selectors + eventSels)
+}
+
+// 合并对象，要添加 node 到 base 对象中
+function extendObj(base, node) {
+    node = node || {}
+    for (let key in node) {
+        if (node.hasOwnProperty(key)) {            
+            base[key] = node[key]
+        }        
+    }
 }
 
 /**
@@ -121,9 +135,9 @@ function bindDirective(welement, el, bindings, directive) {
             value: undefined,
             directives: []
         }
-
         bindings[key] = binding
     }
+
     directive.el = el
     binding.directives.push(directive)    
     var data = welement.data
