@@ -2,14 +2,15 @@ import Directives from './directives'
 const prefix = 'v-'
 
 export default class Demo {
-    constructor(opts = {}) {
-        this.opts = extendObj(opts.methods, opts.data)        
-        // 内部维护一个 dom element 绑定对象
-        this._bindings = makeBindings(this.opts)
+    constructor(opts = {}) {        
+        this.opts = extendObj(opts.methods, opts.data)       
         this.$root = document.getElementById(opts.id)
         // 这里暂时写死
-        this.$els = this.$root.querySelectorAll('[v-text]')
-        parseNodes(this.$els)
+        this.$els = this.$root.querySelectorAll('[v-text], [v-model]')
+        let nodeData = parseNodes(this.$els)
+        // 内部维护一个 dom element 绑定对象
+        this._bindings = makeBindings(this.opts, nodeData)
+        log('this _bindings', this._bindings)
         this.init()
     }
 
@@ -55,47 +56,63 @@ function bindAccessor(bindings, opts) {
  *    text: {value: 'hello', event: []} 
  * }
  */
-function makeBindings(opts) {
+function makeBindings(opts, nodeData) {
     log('opts', opts)  
     let bindings = {}
 
-    for (let key in Directives) {
-        if (Directives.hasOwnProperty(key)) {
-            log('make', key)
-            let value = opts[key]    
-            bindings[key] = {value: value, event: []}
+    // for (let key in Directives) {
+    //     if (Directives.hasOwnProperty(key)) {
+    //         log('make', key)
+    //         let value = opts[key]    
+    //         // bindings[key] = {value: value, event: }
+    //     }
+    // }
+
+    nodeData.forEach(function(item) {
+        for (let key in Directives) {
+            let unit = item[key]
+            if (Directives.hasOwnProperty(key) && unit != void(0)) {
+                let value = opts[unit.value]
+                log('valu', value)
+                bindings[key] = {value: value, event: unit}           
+            }
         }
-    }
+    })
        
     log('bindings', bindings)
     return bindings
 }
 
 // 解析节点，输出所有节点信息列表
-// [{'text': 'hello'}, ...]
+// [{'text': {value: 'hello', owner: $el}}, ...]
 function parseNodes($els) {
-    var attrs = []
-    Array.prototype.forEach.call($els, function(el) {
-        nodeInfo(el)
-        // attrs.push(nodeInfo(el))
+    let attrs = []    
+    Array.prototype.forEach.call($els, function(el) {        
+        attrs.push(nodeInfo(el))
     })
-    log('attrs', attrs)
+    // 拍扁数组
+    let result = attrs.reduce(function(acc, cur) {
+        return acc.concat(cur)        
+    })
+    log('result', result)
+    return result
 }
 
 // 输出一个节点的详细信息
-// [{name: 'text', value: 'hello', owner: $el}, ...]
+// [text: {value: 'hello', owner: $el}, ...]
 function nodeInfo($el) {
     let attrs = $el.attributes
     log('attrs', attrs)
     let list = Array.prototype.map.call(attrs, function(attr) {
-        let name = rmPrefix(attr.name)        
-        return {
-            name: name,
+        let name = rmPrefix(attr.name)
+        let obj = {}
+        obj[name] = {
             value: attr.value,
-            owner: attr.ownerElement,            
+            owner: attr.ownerElement,
         }
+        return obj
     })  
-    log('list', list)  
+    log('list', list)
     return list
 }
 
