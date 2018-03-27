@@ -16,7 +16,7 @@ export default class Demo {
 
     init() {
         // 对 this.opts 进行存取器绑定
-        // bindAccessor(this._bindings, this.opts)
+        bindAccessor(this._bindings, this.opts)
     }
 }
 
@@ -46,6 +46,11 @@ function bindAccessor(bindings, opts) {
             })
         }
     }    
+}
+
+// 更改 dom 视图
+function triggerView(bindings, key) {
+    
 }
 
 // 构造一个对象，联系 dom 和元素的
