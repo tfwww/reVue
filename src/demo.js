@@ -17,6 +17,7 @@ export default class Demo {
     init() {
         // 对 this.opts 进行存取器绑定
         bindAccessor(this._bindings, this.opts)
+        this.opts.hello = 'sdf'
     }
 }
 
@@ -38,10 +39,13 @@ function bindAccessor(bindings, opts) {
                 get: function() {
                     return bindings[key]
                 },         
-                set: function(newValue) {            
-                    log('set', newValue)
-                    // 这里借助 bindings 更改 dom 视图
-                    // bindings[key] = 
+                set: function(newValue) {                                
+                    // 这里借助 bindings 更改 dom 视图                    
+                    for (let prop in bindings) {                        
+                        let value = bindings[prop].event.value
+                        let el = bindings[prop].event.owner
+                        Directives[prop](el, value)
+                    }
                 }
             })
         }

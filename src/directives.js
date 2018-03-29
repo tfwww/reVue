@@ -1,6 +1,8 @@
 export default {
-    text: function(value) {
-        this.el.textContent = value || '';        
+    text: function(el, value) {
+        log('el', el)
+        log('value', value)
+        el.textContent = value || '';        
     },
     model: function() {
 
