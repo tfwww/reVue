@@ -42,9 +42,8 @@ function bindAccessor(bindings, opts) {
                 set: function(newValue) {                                
                     // 这里借助 bindings 更改 dom 视图                    
                     for (let prop in bindings) {                        
-                        let value = bindings[prop].event.value
-                        let el = bindings[prop].event.owner
-                        Directives[prop](el, value)
+                        let el = bindings[prop].event.owner                        
+                        Directives[prop](el, newValue)
                     }
                 }
             })
