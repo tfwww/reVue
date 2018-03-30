@@ -1,7 +1,5 @@
 export default {
-    text: function(el, value) {
-        log('el', el)
-        log('value', value)
+    text: function(el, value) {       
         el.textContent = value || '';        
     },
     model: function() {

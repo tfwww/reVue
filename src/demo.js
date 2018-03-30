@@ -2,22 +2,32 @@ import Directives from './directives'
 const prefix = 'v-'
 
 export default class Demo {
-    constructor(opts = {}) {        
-        this.opts = extendObj(opts.methods, opts.data)       
+    constructor(opts = {}) {
+        let obj = extendObj(opts.methods, opts.data)
+        this.default = copyObj(obj)
+        this.opts = obj
+        log('this opts', this.opts)
+        
         this.$root = document.getElementById(opts.id)
         // 这里暂时写死
         this.$els = this.$root.querySelectorAll('[v-text], [v-model]')
         let nodeData = parseNodes(this.$els)
         // 内部维护一个 dom element 绑定对象
         this._bindings = makeBindings(this.opts, nodeData)
-        log('this _bindings', this._bindings)
+        // log('this _bindings', this._bindings)
         this.init()
     }
 
     init() {
+        log('this', this)
         // 对 this.opts 进行存取器绑定
         bindAccessor(this._bindings, this.opts)
-        this.opts.hello = 'sdf'
+        // 初始值赋值
+        for (let key in this.opts) {
+            log('key', key)  
+            this.opts[key] = this.default[key]
+            // log('for', this.opts[key])
+        }
     }
 }
 
@@ -29,6 +39,15 @@ function extendObj(base, node) {
         }
     }
     return node
+}
+
+// 拷贝对象
+function copyObj(obj) {
+    var result = {}
+    for (let key in obj) {    
+        result[key] = obj[key]
+    }
+    return result
 }
 
 // 存取器设置
@@ -64,8 +83,7 @@ function triggerView(bindings, key) {
  *    text: {value: 'hello', event: []} 
  * }
  */
-function makeBindings(opts, nodeData) {
-    log('opts', opts)  
+function makeBindings(opts, nodeData) {    
     let bindings = {}
 
     // for (let key in Directives) {
@@ -80,14 +98,11 @@ function makeBindings(opts, nodeData) {
         for (let key in Directives) {
             let unit = item[key]
             if (Directives.hasOwnProperty(key) && unit != void(0)) {
-                let value = opts[unit.value]
-                log('valu', value)
+                let value = opts[unit.value]                
                 bindings[key] = {value: value, event: unit}           
             }
         }
-    })
-       
-    log('bindings', bindings)
+    })    
     return bindings
 }
 
@@ -101,8 +116,7 @@ function parseNodes($els) {
     // 拍扁数组
     let result = attrs.reduce(function(acc, cur) {
         return acc.concat(cur)        
-    })
-    log('result', result)
+    })    
     return result
 }
 
@@ -110,7 +124,6 @@ function parseNodes($els) {
 // [text: {value: 'hello', owner: $el}, ...]
 function nodeInfo($el) {
     let attrs = $el.attributes
-    log('attrs', attrs)
     let list = Array.prototype.map.call(attrs, function(attr) {
         let name = rmPrefix(attr.name)
         let obj = {}
@@ -119,8 +132,7 @@ function nodeInfo($el) {
             owner: attr.ownerElement,
         }
         return obj
-    })  
-    log('list', list)
+    })    
     return list
 }
 
