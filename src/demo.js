@@ -5,26 +5,23 @@ export default class Demo {
     constructor(opts = {}) {
         let obj = extendObj(opts.methods, opts.data)
         this.default = copyObj(obj)
-        this.opts = obj
-        log('this opts', this.opts)
+        this.opts = obj        
         
         this.$root = document.getElementById(opts.id)
         // 这里暂时写死
         this.$els = this.$root.querySelectorAll('[v-text], [v-model]')
         let nodeData = parseNodes(this.$els)
         // 内部维护一个 dom element 绑定对象
-        this._bindings = makeBindings(this.opts, nodeData)
+        this._bindings = makeBindings(this.opts, nodeData)  
         // log('this _bindings', this._bindings)
         this.init()
     }
 
-    init() {
-        log('this', this)
+    init() {        
         // 对 this.opts 进行存取器绑定
-        bindAccessor(this._bindings, this.opts)
+        bindAccessor(this._bindings, this.opts, this.default)
         // 初始值赋值
-        for (let key in this.opts) {
-            log('key', key)  
+        for (let key in this.opts) {            
             this.opts[key] = this.default[key]
             // log('for', this.opts[key])
         }
@@ -51,18 +48,22 @@ function copyObj(obj) {
 }
 
 // 存取器设置
-function bindAccessor(bindings, opts) {    
+function bindAccessor(bindings, opts, defaultObj) {
     for (let key in opts) {
         if (opts.hasOwnProperty(key)) {
             Object.defineProperty(opts, key, {
                 get: function() {
                     return bindings[key]
-                },         
-                set: function(newValue) {                                
+                },
+                set: function(newValue) {                    
                     // 这里借助 bindings 更改 dom 视图                    
-                    for (let prop in bindings) {                        
-                        let el = bindings[prop].event.owner                        
-                        Directives[prop](el, newValue)
+                    for (let prop in bindings) {
+                        let el = bindings[prop].event.owner
+                        let arg = bindings[prop].event.value
+                        
+                        if (arg === key) {
+                            Directives[prop](el, newValue)
+                        }                                           
                     }
                 }
             })
