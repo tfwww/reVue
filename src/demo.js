@@ -19,7 +19,7 @@ export default class Demo {
 
     init() {        
         // 对 this.opts 进行存取器绑定
-        bindAccessor(this._bindings, this.opts, this.default)
+        bindAccessor(this._bindings, this.opts)
         // 初始值赋值
         for (let key in this.opts) {            
             this.opts[key] = this.default[key]
@@ -48,7 +48,7 @@ function copyObj(obj) {
 }
 
 // 存取器设置
-function bindAccessor(bindings, opts, defaultObj) {
+function bindAccessor(bindings, opts) {
     for (let key in opts) {
         if (opts.hasOwnProperty(key)) {
             Object.defineProperty(opts, key, {
