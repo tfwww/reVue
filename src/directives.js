@@ -1,6 +1,6 @@
 export default {
-    text: function(el, value) {       
-        el.textContent = value || '';        
+    text: function(el, value) {
+        el.textContent = value || '';
     },
     model: function() {
 
@@ -8,7 +8,7 @@ export default {
     // on: {
     //     // 事件, 类似于 v-on-click
     //     update: function (handler) {
-    //         var event = this.argument            
+    //         var event = this.argument
     //         this.el.addEventListener(event, handler)
     //     }
     // }
